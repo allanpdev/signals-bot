@@ -1,16 +1,23 @@
-const Binance = require('node-binance-api')
+const Binance = require('node-binance-api');
 
-const binance = new Binance().options({
-    APIKEY: 'ixprfcTkudGYjwGDVtuYDiQqFv79H0DQXyV09iMKqf2SDy5jaRAUY7hAc6qdMO4Q',
-    APISECRET: 'o3rAu3O3jn4icCXGSYVRDGynhYX5Q1ow1zt3KbbOZaaATb0vFfYRgqtYSZ8hxcGq'
-})
+const binance = new Binance();
 
-binance.prices('BTCUSDT', (error, ticker) => {
-    if(error){
-        console.error('Erro ao consultar preço: ', error.body)
-    } else{
-        console.log('Preço atual: ', ticker.BTCUSDT)
-    }
-})
+(async () => {
+  try {
+    const prices = await binance.futuresPrices();
 
-const token = '7873617722:AAG7yZ9iJt7cgITJTM0iHnvSxwvZOi_lCGU'
+    // Filtrar apenas os tokens desejados
+    const tokensDesejados = ['BTCUSDT', 'ETHUSDT', '1000PEPEUSDT', 'PEPE_USDT', 'SOLUSDT', 'BNBUSDT', 'GALAUSDT'];
+
+    console.log('Preços selecionados:');
+    tokensDesejados.forEach((symbol) => {
+      if (prices[symbol]) {
+        console.log(`${symbol}: ${prices[symbol]}`);
+      } else {
+        console.log(`${symbol}: não encontrado`);
+      }
+    });
+  } catch (err) {
+    console.error('Erro ao buscar preços:', err);
+  }
+})();
